@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef APU_H_
+#define APU_H_
 
 #include <cstdint>
 #include <fstream>
 
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 
 #include "NESCLETypes.h"
 
@@ -141,21 +142,22 @@ public:
     float GetNoiseSample();
 
     // Allows us to serialize the APU
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Sequencer, timer, reload)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Envelope, start, disable, constant_volume,
-        volume, output, divider_count, decay_count)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Sweeper, enabled, down, reload, mute, shift,
-        timer, period)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(PulseChannel, enable, sample, halt, length,
-        volume, duty_sequence, duty_index, sequencer, envelope, sweeper)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(TriangleChannel, enable, sample, prev_sample,
-        index, halt, length, volume, linear_counter_reload, control_flag,
-        linear_counter, linear_counter_reload_value, sequencer)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(NoiseChannel, enable, halt, length, sample,
-        prev_sample, volume, shift_register, mode, envelope, sequencer)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(SampleChannel, bar)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(Sequencer, timer, reload)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(Envelope, start, disable, constant_volume,
+    //     volume, output, divider_count, decay_count)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(Sweeper, enabled, down, reload, mute, shift,
+    //     timer, period)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(PulseChannel, enable, sample, halt, length,
+    //     volume, duty_sequence, duty_index, sequencer, envelope, sweeper)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(TriangleChannel, enable, sample, prev_sample,
+    //     index, halt, length, volume, linear_counter_reload, control_flag,
+    //     linear_counter, linear_counter_reload_value, sequencer)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(NoiseChannel, enable, halt, length, sample,
+    //     prev_sample, volume, shift_register, mode, envelope, sequencer)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(SampleChannel, bar)
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(APU, pulse1, pulse2, triangle, noise,
-        sample, clock_count, frame_clock_count)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(APU, pulse1, pulse2, triangle, noise,
+    //     sample, clock_count, frame_clock_count)
 };
 }
+#endif

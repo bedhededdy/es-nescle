@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef NESCLEUTIL_H_
+#define NESCLEUTIL_H_
 
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 
 #include <type_traits>
 
@@ -41,3 +42,4 @@ bool Util_FloatEquals(float a, float b);
 template<typename T>
 constexpr auto Util_CastEnumToUnderlyingType(T t);
 }
+#endif

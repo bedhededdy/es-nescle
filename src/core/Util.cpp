@@ -15,9 +15,10 @@
  */
 #include "Util.h"
 
-#include <SDL_log.h>
+// #include <SDL_log.h>
 
 #include <errno.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -58,20 +59,20 @@ const char* Util_GetFileName(const char* path) {
         return path;
 }
 
-bool Util_FileExists(const char* path) {
-    FILE* file;
-    errno_t res = fopen_s(&file, path, "r");
-    if (res != 0)
-        return false;
-    fclose(file);
-    return true;
-}
+// bool Util_FileExists(const char* path) {
+//     FILE* file;
+//     errno_t res = fopen_s(&file, path, "r");
+//     if (res != 0)
+//         return false;
+//     fclose(file);
+//     return true;
+// }
 
-bool Util_CreateDirectoryIfNotExists(const char* path) {
-    // TODO: INVESTIGATE THE FLAGS
-    int res = mkdir(path, 0777);
-    return res == 0 || errno == EEXIST;
-}
+// bool Util_CreateDirectoryIfNotExists(const char* path) {
+//     // TODO: INVESTIGATE THE FLAGS
+//     int res = mkdir(path, 0777);
+//     return res == 0 || errno == EEXIST;
+// }
 
 template<typename T>
 constexpr auto Util_CastEnumToUnderlyingType(T t) {

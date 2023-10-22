@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef PPU_H_
+#define PPU_H_
 
 #include <array>
 #include <cstdint>
 #include <cstdio>
 
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 
 #include "NESCLETypes.h"
 
@@ -200,9 +201,10 @@ public:
 
     uint32_t* GetFramebuffer();
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(OAM, y, tile_id, attributes, x)
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(OAM, y, tile_id, attributes, x)
 
-    friend void to_json(nlohmann::json& j, const PPU& ppu);
-    friend void from_json(const nlohmann::json& j, PPU& ppu);
+    // friend void to_json(nlohmann::json& j, const PPU& ppu);
+    // friend void from_json(const nlohmann::json& j, PPU& ppu);
 };
 }
+#endif

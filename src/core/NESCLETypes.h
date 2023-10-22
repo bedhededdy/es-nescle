@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef NESCLETYPES_H_
+#define NESCLETYPES_H_
 
 namespace NESCLE {
 // Mappers
@@ -43,3 +44,4 @@ class CPU;
 class Emulator;
 class PPU;
 }
+#endif

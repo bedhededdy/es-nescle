@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 // TODO: ADD SUPPORT FOR UNOFFICIAL/UNSUPPORTED OPCODES
-#pragma once
+#ifndef CPU_H_
+#define CPU_H_
 
 #include <cstdint>
 #include <cstdio>
 #include <string>
 
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 
 #include "NESCLETypes.h"
 
@@ -160,8 +161,8 @@ public:
     uint16_t GetPC();
     int GetCyclesRem();
 
-    friend void to_json(nlohmann::json& j, const CPU& cpu);
-    friend void from_json(const nlohmann::json& j, CPU& cpu);
+    // friend void to_json(nlohmann::json& j, const CPU& cpu);
+    // friend void from_json(const nlohmann::json& j, CPU& cpu);
 };
 
 /*
@@ -239,3 +240,4 @@ static void op_txs(CPU* cpu);    // transfer index x to stack pointer
 static void op_tya(CPU* cpu);    // transfer index y to accumulator          (N Z)
 */
 }
+#endif

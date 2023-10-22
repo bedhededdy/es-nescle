@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef BUS_H_
+#define BUS_H_
 
 #include <array>
 #include <cstdint>
 #include <fstream>
 
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 
 #include "APU.h"
 #include "CPU.h"
@@ -117,10 +118,11 @@ public:
     // friend void to_json(nlohmann::json& j, const Bus& b);
     // friend void from_json(const nlohmann::json& j, Bus& b);
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Bus, ram, controller1, controller2,
-        controller1_shifter, controller2_shifter, dma_page, dma_addr, dma_data,
-        dma_2003_off, dma_transfer, dma_dummy, cpu, ppu, cart, apu,
-        time_per_sample, time_per_clock, audio_time, clocks_count
-    )
+    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(Bus, ram, controller1, controller2,
+    //     controller1_shifter, controller2_shifter, dma_page, dma_addr, dma_data,
+    //     dma_2003_off, dma_transfer, dma_dummy, cpu, ppu, cart, apu,
+    //     time_per_sample, time_per_clock, audio_time, clocks_count
+    // )
 };
 }
+#endif
