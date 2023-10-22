@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef MAPPER002_H_
+#define MAPPER002_H_
 
 #include "Mapper.h"
 
@@ -22,9 +23,9 @@ class Mapper002 : public Mapper {
 private:
     uint8_t bank_select;
 
-protected:
-    void ToJSON(nlohmann::json& json) const override;
-    void FromJSON(const nlohmann::json& json) override;
+// protected:
+//     void ToJSON(nlohmann::json& json) const override;
+//     void FromJSON(const nlohmann::json& json) override;
 
 public:
     Mapper002(uint8_t id, Cart& cart, Mapper::MirrorMode mirror)
@@ -38,3 +39,4 @@ public:
     bool MapPPUWrite(uint16_t addr, uint8_t data) override;
 };
 }
+#endif

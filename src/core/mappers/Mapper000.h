@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 // https://nesdev.org/wiki/NROM
-#pragma once
+#ifndef MAPPER000_H_
+#define MAPPER000_H_
 
 #include "Mapper.h"
 
@@ -29,8 +30,9 @@ public:
     uint8_t MapPPURead(uint16_t addr) override;
     bool MapPPUWrite(uint16_t addr, uint8_t data) override;
 
-protected:
-    void ToJSON(nlohmann::json& json) const override;
-    void FromJSON(const nlohmann::json& json) override;
+// protected:
+//     void ToJSON(nlohmann::json& json) const override;
+//     void FromJSON(const nlohmann::json& json) override;
 };
 }
+#endif

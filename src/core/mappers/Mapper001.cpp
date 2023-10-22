@@ -187,31 +187,31 @@ bool Mapper001::MapPPUWrite(uint16_t addr, uint8_t data) {
     return false;
 }
 
-void Mapper001::ToJSON(nlohmann::json& json) const {
-    Mapper::ToJSON(json);
-    json["ctrl"] = ctrl;
-    json["load"] = load;
-    json["load_reg_ct"] = load_reg_ct;
-    json["chr_select4_lo"] = chr_select4_lo;
-    json["chr_select4_hi"] = chr_select4_hi;
-    json["chr_select8"] = chr_select8;
-    json["prg_select16_lo"] = prg_select16_lo;
-    json["prg_select16_hi"] = prg_select16_hi;
-    json["prg_select32"] = prg_select32;
-    json["sram"] = sram;
-}
+// void Mapper001::ToJSON(nlohmann::json& json) const {
+//     Mapper::ToJSON(json);
+//     json["ctrl"] = ctrl;
+//     json["load"] = load;
+//     json["load_reg_ct"] = load_reg_ct;
+//     json["chr_select4_lo"] = chr_select4_lo;
+//     json["chr_select4_hi"] = chr_select4_hi;
+//     json["chr_select8"] = chr_select8;
+//     json["prg_select16_lo"] = prg_select16_lo;
+//     json["prg_select16_hi"] = prg_select16_hi;
+//     json["prg_select32"] = prg_select32;
+//     json["sram"] = sram;
+// }
 
-void Mapper001::FromJSON(const nlohmann::json& json) {
-    Mapper::FromJSON(json);
-    json.at("ctrl").get_to(ctrl);
-    json.at("load").get_to(load);
-    json.at("load_reg_ct").get_to(load_reg_ct);
-    json.at("chr_select4_lo").get_to(chr_select4_lo);
-    json.at("chr_select4_hi").get_to(chr_select4_hi);
-    json.at("chr_select8").get_to(chr_select8);
-    json.at("prg_select16_lo").get_to(prg_select16_lo);
-    json.at("prg_select16_hi").get_to(prg_select16_hi);
-    json.at("prg_select32").get_to(prg_select32);
-    json.at("sram").get_to(sram);
-}
+// void Mapper001::FromJSON(const nlohmann::json& json) {
+//     Mapper::FromJSON(json);
+//     json.at("ctrl").get_to(ctrl);
+//     json.at("load").get_to(load);
+//     json.at("load_reg_ct").get_to(load_reg_ct);
+//     json.at("chr_select4_lo").get_to(chr_select4_lo);
+//     json.at("chr_select4_hi").get_to(chr_select4_hi);
+//     json.at("chr_select8").get_to(chr_select8);
+//     json.at("prg_select16_lo").get_to(prg_select16_lo);
+//     json.at("prg_select16_hi").get_to(prg_select16_hi);
+//     json.at("prg_select32").get_to(prg_select32);
+//     json.at("sram").get_to(sram);
+// }
 }

@@ -60,30 +60,30 @@ Mapper::CreateMapperFromID(uint8_t id, Cart& cart, MirrorMode mirror_mode) {
     return mapper;
 }
 
-void Mapper::ToJSON(nlohmann::json& json) const {
-    json["id"] = id;
-    json["mirror_mode"] = mirror_mode;
-    if (cart.GetChrRomBlocks() == 0) {
-        json["memory"] = cart.GetChrRomRef();
-    }
-}
+// void Mapper::ToJSON(nlohmann::json& json) const {
+//     json["id"] = id;
+//     json["mirror_mode"] = mirror_mode;
+//     if (cart.GetChrRomBlocks() == 0) {
+//         json["memory"] = cart.GetChrRomRef();
+//     }
+// }
 
-void Mapper::FromJSON(const nlohmann::json& json) {
-    json.at("id").get_to(id);
-    json.at("mirror_mode").get_to(mirror_mode);
+// void Mapper::FromJSON(const nlohmann::json& json) {
+//     json.at("id").get_to(id);
+//     json.at("mirror_mode").get_to(mirror_mode);
 
-    try {
-        json.at("memory").get_to(cart.GetChrRomRef());
-    } catch (...) {
+//     try {
+//         json.at("memory").get_to(cart.GetChrRomRef());
+//     } catch (...) {
 
-    }
-}
+//     }
+// }
 
-void to_json(nlohmann::json& json, const Mapper& mapper) {
-    mapper.ToJSON(json);
-}
+// void to_json(nlohmann::json& json, const Mapper& mapper) {
+//     mapper.ToJSON(json);
+// }
 
-void from_json(const nlohmann::json& json, Mapper& mapper) {
-    mapper.FromJSON(json);
-}
+// void from_json(const nlohmann::json& json, Mapper& mapper) {
+//     mapper.FromJSON(json);
+// }
 }

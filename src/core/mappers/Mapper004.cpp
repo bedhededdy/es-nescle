@@ -22,7 +22,7 @@
 // TODO: MAYBE DON'T WANNA BACK  UP SRAM
 #include "Mapper004.h"
 
-#include <SDL_log.h>
+#include <iostream>
 
 #include "../Cart.h"
 
@@ -153,43 +153,42 @@ bool Mapper004::MapPPUWrite(uint16_t addr, uint8_t data) {
         return true;
     }
 
-    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-        "ERR: ATTEMPT TO WRITE TO PPU RAM\n");
+    std::cout << "ERR: ATTEMPT TO WRITE TO PPU RAM\n";
     return false;
 }
 
 // FIXME: MIRRORING IS BUSTED
-void Mapper004::ToJSON(nlohmann::json& json) const {
-    Mapper::ToJSON(json);
-    json["registers"] = registers;
-    json["chr_banks"] = chr_banks;
-    json["prg_banks"] = prg_banks;
-    json["target_register"] = target_register;
-    json["prg_bank_mode"] = prg_bank_mode;
-    json["chr_inversion"] = chr_inversion;
-    json["irq_active"] = irq_active;
-    json["irq_enabled"] = irq_enabled;
-    json["irq_update"] = irq_update;
-    json["irq_counter"] = irq_counter;
-    json["irq_reload"] = irq_reload;
-    json["sram"] = sram;
-}
+// void Mapper004::ToJSON(nlohmann::json& json) const {
+//     Mapper::ToJSON(json);
+//     json["registers"] = registers;
+//     json["chr_banks"] = chr_banks;
+//     json["prg_banks"] = prg_banks;
+//     json["target_register"] = target_register;
+//     json["prg_bank_mode"] = prg_bank_mode;
+//     json["chr_inversion"] = chr_inversion;
+//     json["irq_active"] = irq_active;
+//     json["irq_enabled"] = irq_enabled;
+//     json["irq_update"] = irq_update;
+//     json["irq_counter"] = irq_counter;
+//     json["irq_reload"] = irq_reload;
+//     json["sram"] = sram;
+// }
 
-void Mapper004::FromJSON(const nlohmann::json& json) {
-    Mapper::FromJSON(json);
-    json.at("registers").get_to(registers);
-    json.at("chr_banks").get_to(chr_banks);
-    json.at("prg_banks").get_to(prg_banks);
-    json.at("target_register").get_to(target_register);
-    json.at("prg_bank_mode").get_to(prg_bank_mode);
-    json.at("chr_inversion").get_to(chr_inversion);
-    json.at("irq_active").get_to(irq_active);
-    json.at("irq_enabled").get_to(irq_enabled);
-    json.at("irq_update").get_to(irq_update);
-    json.at("irq_counter").get_to(irq_counter);
-    json.at("irq_reload").get_to(irq_reload);
-    json.at("sram").get_to(sram);
-}
+// void Mapper004::FromJSON(const nlohmann::json& json) {
+//     Mapper::FromJSON(json);
+//     json.at("registers").get_to(registers);
+//     json.at("chr_banks").get_to(chr_banks);
+//     json.at("prg_banks").get_to(prg_banks);
+//     json.at("target_register").get_to(target_register);
+//     json.at("prg_bank_mode").get_to(prg_bank_mode);
+//     json.at("chr_inversion").get_to(chr_inversion);
+//     json.at("irq_active").get_to(irq_active);
+//     json.at("irq_enabled").get_to(irq_enabled);
+//     json.at("irq_update").get_to(irq_update);
+//     json.at("irq_counter").get_to(irq_counter);
+//     json.at("irq_reload").get_to(irq_reload);
+//     json.at("sram").get_to(sram);
+// }
 
 void Mapper004::CountdownScanline() {
     if (irq_counter == 0)

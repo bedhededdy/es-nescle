@@ -47,13 +47,13 @@ bool Mapper066::MapPPUWrite(uint16_t addr, uint8_t data) {
     return false;
 }
 
-void Mapper066::ToJSON(nlohmann::json& json) const {
-    Mapper::ToJSON(json);
-    json["bank_select"] = bank_select;
-}
+// void Mapper066::ToJSON(nlohmann::json& json) const {
+//     Mapper::ToJSON(json);
+//     json["bank_select"] = bank_select;
+// }
 
-void Mapper066::FromJSON(const nlohmann::json& json) {
-    Mapper::FromJSON(json);
-    bank_select = json["bank_select"];
-}
+// void Mapper066::FromJSON(const nlohmann::json& json) {
+//     Mapper::FromJSON(json);
+//     bank_select = json["bank_select"];
+// }
 }

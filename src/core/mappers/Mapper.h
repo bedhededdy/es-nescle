@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef MAPPER_H_
+#define MAPPER_H_
 
 #include <cstdint>
 #include <fstream>
 #include <memory>
 
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 
 #include "../NESCLETypes.h"
 
@@ -41,8 +42,8 @@ protected:
     Mapper(uint8_t _id, Cart& _cart, MirrorMode _mirror)
         : id(_id), cart(_cart), mirror_mode(_mirror) {}
 
-    virtual void ToJSON(nlohmann::json& json) const;
-    virtual void FromJSON(const nlohmann::json& json);
+    // virtual void ToJSON(nlohmann::json& json) const;
+    // virtual void FromJSON(const nlohmann::json& json);
 
 public:
     static std::unique_ptr<Mapper>
@@ -69,7 +70,8 @@ public:
 
     MirrorMode GetMirrorMode() { return mirror_mode; }
 
-    friend void to_json(nlohmann::json& j, const Mapper& mapper);
-    friend void from_json(const nlohmann::json& j, Mapper& mapper);
+    // friend void to_json(nlohmann::json& j, const Mapper& mapper);
+    // friend void from_json(const nlohmann::json& j, Mapper& mapper);
 };
 }
+#endif

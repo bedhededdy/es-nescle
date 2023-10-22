@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#ifndef MAPPER001_H_
+#define MAPPER001_H_
 
 #include <array>
 
@@ -42,9 +43,9 @@ private:
     // the iNES header, we must allocate the maximum possible amount of 32kb
     std::array<uint8_t, 0x8000> sram;
 
-protected:
-    void ToJSON(nlohmann::json& json) const override;
-    void FromJSON(const nlohmann::json& json) override;
+// protected:
+//     void ToJSON(nlohmann::json& json) const override;
+//     void FromJSON(const nlohmann::json& json) override;
 
 public:
     Mapper001(uint8_t id, Cart& cart, Mapper::MirrorMode mirror)
@@ -58,3 +59,4 @@ public:
     bool MapPPUWrite(uint16_t addr, uint8_t data) override;
 };
 }
+#endif
