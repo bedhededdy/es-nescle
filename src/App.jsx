@@ -73,6 +73,8 @@ function App() {
 
         // console.log("First 4: ", bufferView.slice(0, 4));
 
+        console.log("called");
+
         const bufPtr = window.emuModule._malloc(buffer.byteLength);
         const finalBuffer = new Uint8Array(window.emuModule.HEAPU8.buffer, bufPtr, buffer.byteLength);
         finalBuffer.set(new Uint8Array(buffer));
@@ -80,7 +82,7 @@ function App() {
 
         // FIXME: THIS WON'T WORK BECAUSE YOU'RE NOT ALLOWING RAW PTR
         // NOT SURE HOW TO FIX
-        if (emu.loadROM(finalBuffer.byteOffset)) {
+        if (emu.loadROM(bufPtr)) {
           emu.setRunEmulation(true);
         } else {
           emu.setRunEmulation(false);

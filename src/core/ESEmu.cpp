@@ -20,7 +20,7 @@ std::vector<uint8_t> ESEmu::GetFrameBuffer() {
     return res;
 }
 
-bool ESEmu::LoadROM(uint64_t buf_as_ptr) {
+bool ESEmu::LoadROM(uint8_t* buf_as_ptr) {
     return nes.GetCart().LoadROMStr((char*)buf_as_ptr);
 }
 
@@ -51,7 +51,7 @@ EMSCRIPTEN_BINDINGS(Emulator) {
     .constructor<>()
     .function("getFrameBuffer", &NESCLE::ESEmu::GetFrameBuffer)
     .function("clock", &NESCLE::ESEmu::Clock)
-    .function("loadROM", &NESCLE::ESEmu::LoadROM)
+    .function("loadROM", &NESCLE::ESEmu::LoadROM, allow_raw_pointers())
     .function("getRunEmulation", &NESCLE::ESEmu::GetRunEmulation)
     .function("setRunEmulation", &NESCLE::ESEmu::SetRunEmulation);
 
