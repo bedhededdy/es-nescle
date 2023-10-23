@@ -52,11 +52,14 @@ function App() {
       if (!file) return;
 
       const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
 
       reader.onload = (e) => {
         const buffer = e.target.result;
         const bufferAsStr = new Uint8Array(buffer).toString();
+        console.log("Buffer strlen: " + bufferAsStr.length);
+        // FIXME: THE PROBLEM IS THAT EACH BYTE IS BEING CONVERTED INTO AN ASCII
+        // SO ARR[0,1] = 78 WHICH IS ACTUALLY ASCII FOR 'N'
+        console.log("Buffer header: " + bufferAsStr.slice(0, 4));
         if (emu.loadROM(bufferAsStr)) {
           emu.setRunEmulation(true);
         } else {
@@ -64,11 +67,10 @@ function App() {
         }
       }
 
-      const fileAsStr = "";
-      if (emu.loadROM(fileAsStr)) {
-        emu.setRunEmulation(true);
-      } else {
-        emu.setRunEmulation(false);
+      reader.readAsArrayBuffer(file);
+
+      return () => {
+        chooseFileRef.current.removeEventListener("change", () => {});
       }
     });
   }, [chooseFileRef]);
