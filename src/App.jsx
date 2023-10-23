@@ -65,20 +65,27 @@ function App() {
         // ALSO COMPILE WITH RUNTIME ASSERTIONS (-S ASSERTIONS=1)
 
         // FIXME: MALLOC MISSING FREE
-        const bufferView = new Uint8Array(buffer);
-        const finalBuffer = bufferView.byteOffset;
+        // const bufferView = new Uint8Array(buffer);
+        // buffer.
+        // const finalBuffer = bufferView.byteOffset;
 
-        console.log("Buffer bytelen: " + bufferView.byteLength);
+        // console.log("Buffer bytelen: " + bufferView.byteLength);
 
-        console.log("First 4: ", bufferView.slice(0, 4));
+        // console.log("First 4: ", bufferView.slice(0, 4));
+
+        const bufPtr = window.emuModule._malloc(buffer.byteLength);
+        const finalBuffer = new Uint8Array(window.emuModule.HEAPU8.buffer, bufPtr, buffer.byteLength);
+        finalBuffer.set(new Uint8Array(buffer));
+
 
         // FIXME: THIS WON'T WORK BECAUSE YOU'RE NOT ALLOWING RAW PTR
         // NOT SURE HOW TO FIX
-        // if (emu.loadROM(finalBuffer)) {
-        //   emu.setRunEmulation(true);
-        // } else {
-        //   emu.setRunEmulation(false);
-        // }
+        if (emu.loadROM(finalBuffer.byteOffset)) {
+          emu.setRunEmulation(true);
+        } else {
+          emu.setRunEmulation(false);
+        }
+
       }
 
       reader.readAsArrayBuffer(file);

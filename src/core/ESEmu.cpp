@@ -20,8 +20,8 @@ std::vector<uint8_t> ESEmu::GetFrameBuffer() {
     return res;
 }
 
-bool ESEmu::LoadROM(uint8_t* buf) {
-    return nes.GetCart().LoadROMStr((char*)buf);
+bool ESEmu::LoadROM(uint64_t buf_as_ptr) {
+    return nes.GetCart().LoadROMStr((char*)buf_as_ptr);
 }
 
 void ESEmu::Clock() {

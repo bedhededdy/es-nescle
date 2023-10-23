@@ -15,7 +15,7 @@ private:
     bool run_emulation;
 
 public:
-    bool LoadROM(uint8_t* buf);
+    bool LoadROM(uint64_t file_buf_ptr);
     void Clock();
     std::vector<uint8_t> GetFrameBuffer();
 
