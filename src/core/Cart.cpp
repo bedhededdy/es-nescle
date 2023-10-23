@@ -20,6 +20,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 
 #include "mappers/Mapper.h"
 #include "PPU.h"
@@ -28,8 +29,10 @@
 namespace NESCLE {
 bool Cart::LoadROMStr(const char* file_as_str) {
     // FIXME: MAKE THIS TAKE THE LENGTH OF THE FILE IN BYTES
-    if (strncmp(file_as_str, "NES\x1a", 4) != 0)
+    if (strncmp(file_as_str, "NES\x1a", 4) != 0) {
+        std::cout << "header did not match\n";
         return false;
+    }
     size_t read_pos = 16;
     memcpy(&metadata, file_as_str, 16);
 
@@ -39,8 +42,10 @@ bool Cart::LoadROMStr(const char* file_as_str) {
 
     file_type = (metadata.mapper2 & 0x0c) == 0x08 ? FileType::NES2 :
         FileType::INES;
+    std::cout << "File Type: " << (int)file_type << "\n";
 
     const size_t prg_rom_nbytes = Cart::GetPrgRomBytes();
+    std::cout << "PRG ROM: " << prg_rom_nbytes << '\n';
     prg_rom.resize(prg_rom_nbytes);
     prg_rom.shrink_to_fit();
 
@@ -48,6 +53,7 @@ bool Cart::LoadROMStr(const char* file_as_str) {
     read_pos += prg_rom_nbytes;
 
     const size_t chr_rom_nbytes = Cart::GetChrRomBytes();
+    std::cout << "CHR ROM: " << chr_rom_nbytes;
     chr_rom.resize(chr_rom_nbytes);
     chr_rom.shrink_to_fit();
     if (GetChrRomBlocks() > 0) {

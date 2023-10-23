@@ -2,6 +2,8 @@
 
 #include <emscripten/bind.h>
 
+#include <iostream>
+
 #include "PPU.h"
 
 namespace NESCLE {
@@ -24,6 +26,7 @@ bool ESEmu::LoadROM(std::string file_as_str) {
 
 void ESEmu::Clock() {
     if (run_emulation) {
+        std::cout << "Ran emulation\n";
         while (!nes.GetPPU().GetFrameComplete()) {
             nes.Clock();
         }
