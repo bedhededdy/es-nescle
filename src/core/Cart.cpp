@@ -27,7 +27,42 @@
 
 namespace NESCLE {
 bool Cart::LoadROMStr(const char* file_as_str) {
-    return false;
+    // FIXME: MAKE THIS TAKE THE LENGTH OF THE FILE IN BYTES
+    if (strncmp(file_as_str, "NES\x1a", 4) != 0)
+        return false;
+    size_t read_pos = 16;
+    memcpy(&metadata, file_as_str, 16);
+
+    if (metadata.mapper1 & 0x04) {
+        read_pos += 512;
+    }
+
+    file_type = (metadata.mapper2 & 0x0c) == 0x08 ? FileType::NES2 :
+        FileType::INES;
+
+    const size_t prg_rom_nbytes = Cart::GetPrgRomBytes();
+    prg_rom.resize(prg_rom_nbytes);
+    prg_rom.shrink_to_fit();
+
+    memcpy(&prg_rom[0], &file_as_str[read_pos], prg_rom_nbytes);
+    read_pos += prg_rom_nbytes;
+
+    const size_t chr_rom_nbytes = Cart::GetChrRomBytes();
+    chr_rom.resize(chr_rom_nbytes);
+    chr_rom.shrink_to_fit();
+    if (GetChrRomBlocks() > 0) {
+        memcpy(&chr_rom[0], &file_as_str[read_pos], chr_rom_nbytes);
+        read_pos += chr_rom_nbytes;
+    }
+
+    uint8_t mapper_id = (metadata.mapper2 & 0xf0) | (metadata.mapper1 >> 4);
+    auto mirror_mode = (metadata.mapper1 & 1) ? Mapper::MirrorMode::VERTICAL
+        : Mapper::MirrorMode::HORIZONTAL;
+    SetMapper(mapper_id, mirror_mode);
+
+    rom_path = "THIS IS MY ROM PATH";
+
+    return true;
 }
 
 // bool Cart::LoadROM(const char* path) {
