@@ -15,6 +15,7 @@
  */
 #include "CPU.h"
 
+#include <cassert>
 #include <cstdlib>
 #include <functional>
 #include <sstream>
@@ -28,39 +29,39 @@
 #define CPU_IS_NEG(x)   ((x) & 0x80)
 
 namespace NESCLE {
-void to_json(nlohmann::json& j, const CPU& cpu) {
-    j = nlohmann::json {
-        {"a", cpu.a},
-        {"y", cpu.y},
-        {"x", cpu.x},
-        {"sp", cpu.sp},
-        {"status", cpu.status},
-        {"pc", cpu.pc},
+// void to_json(nlohmann::json& j, const CPU& cpu) {
+//     j = nlohmann::json {
+//         {"a", cpu.a},
+//         {"y", cpu.y},
+//         {"x", cpu.x},
+//         {"sp", cpu.sp},
+//         {"status", cpu.status},
+//         {"pc", cpu.pc},
 
-        // HAVE TO STORE OPCODE SINCE INSTR* WILL BE INVALIDATED BETWEEN RUNS
-        {"opcode", cpu.instr->opcode},
+//         // HAVE TO STORE OPCODE SINCE INSTR* WILL BE INVALIDATED BETWEEN RUNS
+//         {"opcode", cpu.instr->opcode},
 
-        {"addr_eff", cpu.addr_eff},
-        {"cycles_rem", cpu.cycles_rem},
-        {"cycles_count", cpu.cycles_count}
-    };
-}
+//         {"addr_eff", cpu.addr_eff},
+//         {"cycles_rem", cpu.cycles_rem},
+//         {"cycles_count", cpu.cycles_count}
+//     };
+// }
 
-void from_json(const nlohmann::json& j, CPU& cpu) {
-    j.at("a").get_to(cpu.a);
-    j.at("y").get_to(cpu.y);
-    j.at("x").get_to(cpu.x);
-    j.at("sp").get_to(cpu.sp);
-    j.at("status").get_to(cpu.status);
-    j.at("pc").get_to(cpu.pc);
+// void from_json(const nlohmann::json& j, CPU& cpu) {
+//     j.at("a").get_to(cpu.a);
+//     j.at("y").get_to(cpu.y);
+//     j.at("x").get_to(cpu.x);
+//     j.at("sp").get_to(cpu.sp);
+//     j.at("status").get_to(cpu.status);
+//     j.at("pc").get_to(cpu.pc);
 
-    uint8_t opcode = j.at("opcode");
-    cpu.instr = cpu.Decode(opcode);
+//     uint8_t opcode = j.at("opcode");
+//     cpu.instr = cpu.Decode(opcode);
 
-    j.at("addr_eff").get_to(cpu.addr_eff);
-    j.at("cycles_rem").get_to(cpu.cycles_rem);
-    j.at("cycles_count").get_to(cpu.cycles_count);
-}
+//     j.at("addr_eff").get_to(cpu.addr_eff);
+//     j.at("cycles_rem").get_to(cpu.cycles_rem);
+//     j.at("cycles_count").get_to(cpu.cycles_count);
+// }
 
 // Don't copy the reference to the bus
 // CPU& CPU::operator=(const CPU& cpu) {

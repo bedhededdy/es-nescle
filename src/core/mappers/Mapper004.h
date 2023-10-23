@@ -61,3 +61,4 @@ public:
 //     void FromJSON(const nlohmann::json& json) override;
 };
 }
+#endif

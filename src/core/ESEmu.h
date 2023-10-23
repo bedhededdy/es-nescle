@@ -3,13 +3,24 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
+
+#include "Bus.h"
 
 namespace NESCLE {
 class ESEmu {
+private:
+    Bus nes;
+
+    bool run_emulation;
+
 public:
-    bool LoadROM(const char* file_as_str);
+    bool LoadROM(std::string file_as_str);
     void Clock();
     std::vector<uint8_t> GetFrameBuffer();
+
+    void SetRunEmulation(bool run);
+    bool GetRunEmulation();
 };
 }
 #endif

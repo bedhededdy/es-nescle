@@ -49,7 +49,8 @@
 // TODO: MAYBE WE DON'T WANNA BACK UP SRAM
 #include "Mapper001.h"
 
-#include <SDL_log.h>
+// #include <SDL_log.h>
+#include <iostream>
 
 #include "../Cart.h"
 
@@ -182,8 +183,7 @@ bool Mapper001::MapPPUWrite(uint16_t addr, uint8_t data) {
         return true;
     }
 
-    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-                "Attempted to write to CHR ROM at %04x", addr);
+    std::cout << "Attempted to write to CHR ROM at decimal address " << addr << "\n";
     return false;
 }
 

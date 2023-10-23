@@ -8,14 +8,16 @@ function App() {
   const [renderFrame, setRenderFrame] = useState(false);
 
   const canvasRef = useRef(null);
+  const chooseFileRef = useRef(null);
 
   const canvasWidth = 512;
   const canvasHeight = 480;
 
   const renderFrameCallback = () => {
     setInterval(() => {
+      emu.Clock();
       setRenderFrame(true);
-    }, 16)
+    }, 1)
   }
 
   // useEffect(() => {
@@ -42,10 +44,25 @@ function App() {
 
   useEffect(() => {
     renderFrameCallback();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    chooseFileRef.current.addEventListener("change", (e) => {
+
+      const fileAsStr = "";
+      if (emu.loadROM(fileAsStr)) {
+        emu.setRunEmulation(true);
+      } else {
+        emu.setRunEmulation(false);
+      }
+    });
+  }, [chooseFileRef]);
 
   return (
     <>
+      <div>
+        <input ref={chooseFileRef} type="file" />
+      </div>
       <canvas ref={canvasRef} id="emuScreen" width={canvasWidth} height={canvasHeight}></canvas>
     </>
   )

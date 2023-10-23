@@ -27,7 +27,7 @@
 
 namespace NESCLE {
 bool Cart::LoadROMStr(const char* file_as_str) {
-
+    return false;
 }
 
 // bool Cart::LoadROM(const char* path) {
