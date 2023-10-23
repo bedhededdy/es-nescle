@@ -15,7 +15,7 @@ function App() {
 
   const renderFrameCallback = () => {
     setInterval(() => {
-      emu.Clock();
+      emu.clock();
       setRenderFrame(true);
     }, 1)
   }
@@ -48,6 +48,21 @@ function App() {
 
   useEffect(() => {
     chooseFileRef.current.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+
+      reader.onload = (e) => {
+        const buffer = e.target.result;
+        const bufferAsStr = new Uint8Array(buffer).toString();
+        if (emu.loadROM(bufferAsStr)) {
+          emu.setRunEmulation(true);
+        } else {
+          emu.setRunEmulation(false);
+        }
+      }
 
       const fileAsStr = "";
       if (emu.loadROM(fileAsStr)) {
