@@ -83,6 +83,8 @@ function App() {
         // FIXME: THIS WON'T WORK BECAUSE YOU'RE NOT ALLOWING RAW PTR
         // NOT SURE HOW TO FIX
         if (emu.loadROM(finalBuffer.byteOffset)) {
+          emu.powerOn();
+          emu.reset();
           emu.setRunEmulation(true);
         } else {
           emu.setRunEmulation(false);

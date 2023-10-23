@@ -8,6 +8,7 @@
 
 namespace NESCLE {
 std::vector<uint8_t> ESEmu::GetFrameBuffer() {
+    // FIXME: USE FRAMEBUFFER PROPERLY
     constexpr int size = 256 * 240 * 4;
     std::vector<uint8_t> res(size);
     uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
@@ -26,7 +27,6 @@ bool ESEmu::LoadROM(uintptr_t buf_as_ptr) {
 
 void ESEmu::Clock() {
     if (run_emulation) {
-        std::cout << "Ran emulation\n";
         while (!nes.GetPPU().GetFrameComplete()) {
             nes.Clock();
         }
@@ -40,6 +40,15 @@ void ESEmu::SetRunEmulation(bool run) {
 
 bool ESEmu::GetRunEmulation() {
     return run_emulation;
+}
+
+void ESEmu::Reset() {
+
+    nes.Reset();
+}
+
+void ESEmu::PowerOn() {
+    nes.PowerOn();
 }
 
 }

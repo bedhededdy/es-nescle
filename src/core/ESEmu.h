@@ -19,6 +19,9 @@ public:
     void Clock();
     std::vector<uint8_t> GetFrameBuffer();
 
+    void PowerOn();
+    void Reset();
+
     void SetRunEmulation(bool run);
     bool GetRunEmulation();
 };
