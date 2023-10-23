@@ -10,6 +10,7 @@ namespace NESCLE {
 std::vector<uint8_t> ESEmu::GetFrameBuffer() {
     // FIXME: USE FRAMEBUFFER PROPERLY
     // FIXME: THIS IS LEAKING INFINITY MEMORY
+    std::cout << "called\n";
     constexpr int size = 256 * 240 * 4;
     std::vector<uint8_t> res(size);
     uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
