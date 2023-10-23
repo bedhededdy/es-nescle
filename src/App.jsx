@@ -55,16 +55,30 @@ function App() {
 
       reader.onload = (e) => {
         const buffer = e.target.result;
-        const bufferAsStr = new Uint8Array(buffer).toString();
-        console.log("Buffer strlen: " + bufferAsStr.length);
+        // const bufferAsArr = new Uint8Array(buffer);
+        // console.log("Buffer strlen: " + bufferAsArr.length);
         // FIXME: THE PROBLEM IS THAT EACH BYTE IS BEING CONVERTED INTO AN ASCII
         // SO ARR[0,1] = 78 WHICH IS ACTUALLY ASCII FOR 'N'
-        console.log("Buffer header: " + bufferAsStr.slice(0, 4));
-        if (emu.loadROM(bufferAsStr)) {
-          emu.setRunEmulation(true);
-        } else {
-          emu.setRunEmulation(false);
-        }
+        // console.log("Buffer header: " + bufferAsArr.slice(0, 4));
+
+        // FIXME: EXPORT MALLOC AND ALLOCATE A BUFFER
+        // ALSO COMPILE WITH RUNTIME ASSERTIONS (-S ASSERTIONS=1)
+
+        // FIXME: MALLOC MISSING FREE
+        const bufferView = new Uint8Array(buffer);
+        const finalBuffer = bufferView.byteOffset;
+
+        console.log("Buffer bytelen: " + bufferView.byteLength);
+
+        console.log("First 4: ", bufferView.slice(0, 4));
+
+        // FIXME: THIS WON'T WORK BECAUSE YOU'RE NOT ALLOWING RAW PTR
+        // NOT SURE HOW TO FIX
+        // if (emu.loadROM(finalBuffer)) {
+        //   emu.setRunEmulation(true);
+        // } else {
+        //   emu.setRunEmulation(false);
+        // }
       }
 
       reader.readAsArrayBuffer(file);
