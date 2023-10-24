@@ -20,7 +20,7 @@ std::vector<uint8_t> ESEmu::GetFrameBuffer() {
             res[i+2] = frame_buffer[i/4] & 0x000000ff;
             res[i+3] = frame_buffer[i/4] & 0xff000000;
 
-            if (res[i+3] != 0)
+            if (frame_buffer[i/4] != 0)
                 std::cout << "we have something to show\n";
         } else {
             res[i] = 0xff;
