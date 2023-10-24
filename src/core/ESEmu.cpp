@@ -81,7 +81,8 @@ EMSCRIPTEN_BINDINGS(Emulator) {
     .function("getRunEmulation", &NESCLE::ESEmu::GetRunEmulation)
     .function("setRunEmulation", &NESCLE::ESEmu::SetRunEmulation)
     .function("powerOn", &NESCLE::ESEmu::PowerOn)
-    .function("reset", &NESCLE::ESEmu::Reset);
+    .function("reset", &NESCLE::ESEmu::Reset)
+    .function("setPC", &NESCLE::ESEmu::SetPC);
 
     register_vector<uint8_t>("ByteArr");
 }
