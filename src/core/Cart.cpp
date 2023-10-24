@@ -53,7 +53,7 @@ bool Cart::LoadROMStr(const char* file_as_str) {
     read_pos += prg_rom_nbytes;
 
     const size_t chr_rom_nbytes = Cart::GetChrRomBytes();
-    std::cout << "CHR ROM: " << chr_rom_nbytes;
+    std::cout << "CHR ROM: " << chr_rom_nbytes << '\n';
     chr_rom.resize(chr_rom_nbytes);
     chr_rom.shrink_to_fit();
     if (GetChrRomBlocks() > 0) {

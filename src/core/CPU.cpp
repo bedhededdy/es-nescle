@@ -885,7 +885,7 @@ void CPU::Clock() {
         CPU_DisassembleLog(cpu);
 #endif
 
-        std::cout << DisassembleString(pc-1);
+        std::cout << DisassembleString(pc-1) << "\n";
 
         // Execute
         SetAddrMode();
