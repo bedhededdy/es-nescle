@@ -7,6 +7,7 @@ import Module from "./core/a.out.js";
 
 new Module().then(module => {
   window.emuModule = module;
+  window.emulator = new module.ESEmu();
 
   ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
