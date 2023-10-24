@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <functional>
 #include <sstream>
+#include <iostream>
 
 #include "Bus.h"
 #include "Cart.h"
@@ -884,6 +885,8 @@ void CPU::Clock() {
         CPU_DisassembleLog(cpu);
 #endif
 
+        std::cout << DisassembleString(pc-1);
+
         // Execute
         SetAddrMode();
         Execute();
@@ -892,6 +895,10 @@ void CPU::Clock() {
     // Countdown
     cycles_rem--;
     cycles_count++;
+}
+
+void CPU::SetPC(uint16_t addr) {
+    pc = addr;
 }
 
 // FIXME: WE MAY WANT THE IRQ TO BE SET BEFORE PUSHING

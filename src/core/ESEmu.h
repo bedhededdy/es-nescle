@@ -24,6 +24,8 @@ public:
 
     void SetRunEmulation(bool run);
     bool GetRunEmulation();
+
+    void SetPC(uint16_t addr);
 };
 }
 #endif

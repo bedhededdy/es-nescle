@@ -32,10 +32,18 @@ bool ESEmu::LoadROM(uintptr_t buf_as_ptr) {
 
 void ESEmu::Clock() {
     if (run_emulation) {
-        while (!nes.GetPPU().GetFrameComplete()) {
-            nes.Clock();
+        // while (!nes.GetPPU().GetFrameComplete()) {
+        //     nes.Clock();
+        // }
+        // nes.GetPPU().ClearFrameComplete();
+        for (int i = 0; i < 500; i++) {
+            do {
+                nes.GetCPU().Clock();
+            } while (nes.GetCPU().GetCyclesRem() > 0);
+            nes.GetCPU().Clock();
         }
-        nes.GetPPU().ClearFrameComplete();
+
+        run_emulation = false;
     }
 }
 
@@ -54,6 +62,10 @@ void ESEmu::Reset() {
 
 void ESEmu::PowerOn() {
     nes.PowerOn();
+}
+
+void ESEmu::SetPC(uint16_t addr) {
+    nes.GetCPU().SetPC(addr);
 }
 
 }
