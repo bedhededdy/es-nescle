@@ -22,8 +22,6 @@ std::vector<uint8_t> ESEmu::GetFrameBuffer() {
 
             if (res[i+3] != 0)
                 std::cout << "we have something to show\n";
-            else
-                std::cout << "nothing to show\n";
         } else {
             res[i] = 0xff;
             res[i+1] = 0;
