@@ -127,11 +127,14 @@ function RomSelector() {
   const chooseFileRef = useRef(null);
 
   const fileSelected = useCallback((e) => {
+    console.log("called");
     const file = e.target.files[0];
     if (!file) {
       console.log("No file selected");
       return;
     }
+
+    const emu = window.emulator;
 
     const reader = new FileReader();
       reader.onload = (e) => {
@@ -153,6 +156,8 @@ function RomSelector() {
 
       window.emuModule._free(bufPtr);
     }
+
+    reader.readAsArrayBuffer(file);
   }, []);
 
   return (
@@ -183,10 +188,7 @@ function EmuScreen() {
     const pxVec = emu.getFrameBuffer();
     const pxArr = new Uint8Array(pxVec.size());
     for (let i = 0; i < pxArr.length; i++) {
-      if (i % 4 !== 0)
-        pxArr[i] = pxVec.get(i);
-      else
-        pxArr[i] = Date.now() % 256;
+      pxArr[i] = pxVec.get(i);
     }
 
     const scaleFactor = canvasWidth / 256;
