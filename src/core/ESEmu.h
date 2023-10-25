@@ -13,7 +13,8 @@ namespace NESCLE {
 class ESEmu {
 private:
     Bus nes;
-
+    // FIXME: THIS IS NEVER FREED
+    uint8_t* frame_buffer_fixed = new uint8_t[256 * 240 * 4];
     bool run_emulation;
 
 public:

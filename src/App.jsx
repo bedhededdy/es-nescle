@@ -181,6 +181,8 @@ function EmuScreen() {
   const canvasHeight = 480;
 
   const onAnimationFrame = useCallback(() => {
+    // FIXME: NEED A WAY TO TELL IT NOT TO CLOCK IF NOT ENOUGH
+    //        TIME HAS PASSED
     var t0 = Date.now();
     window.emulator.clock();
     if (window.emulator.getRunEmulation()) {

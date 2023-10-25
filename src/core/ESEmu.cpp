@@ -24,12 +24,11 @@ emscripten::val ESEmu::GetFrameBuffer() {
     //        IT FIXES THE MEMCPY PERFORMANCE ISSUE
     uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
     // FIXME: MAY NEED TO BE UNSIGNED CHAR TO WORK??
-    uint8_t* fixed_byteorder_arr = new uint8_t[256 * 240 * 4];
     for (int i = 0; i < size; i += 4) {
-        fixed_byteorder_arr[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
-        fixed_byteorder_arr[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
-        fixed_byteorder_arr[i+2] = frame_buffer[i/4] & 0x000000ff;
-        fixed_byteorder_arr[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
+        frame_buffer_fixed[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
+        frame_buffer_fixed[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
+        frame_buffer_fixed[i+2] = frame_buffer[i/4] & 0x000000ff;
+        frame_buffer_fixed[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
     }
     return emscripten::val(emscripten::typed_memory_view(size, fixed_byteorder_arr));
 }
