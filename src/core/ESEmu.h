@@ -26,6 +26,9 @@ public:
     bool GetRunEmulation();
 
     void SetPC(uint16_t addr);
+
+    bool KeyDown(std::string key_name);
+    bool KeyUp(std::string key_name);
 };
 }
 #endif

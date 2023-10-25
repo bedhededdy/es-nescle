@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+#include "Bus.h"
 #include "PPU.h"
 
 namespace NESCLE {
@@ -14,20 +15,10 @@ std::vector<uint8_t> ESEmu::GetFrameBuffer() {
     std::vector<uint8_t> res(size);
     uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
     for (int i = 0; i < size; i += 4) {
-        if (run_emulation) {
-            res[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
-            res[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
-            res[i+2] = frame_buffer[i/4] & 0x000000ff;
-            res[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
-
-            // if (res[i+3] != 0)
-                // std::cout << "we have something to show\n";
-        } else {
-            res[i] = 0xff;
-            res[i+1] = 0;
-            res[i+2] = 0;
-            res[i+3] = 0xff;
-        }
+        res[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
+        res[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
+        res[i+2] = frame_buffer[i/4] & 0x000000ff;
+        res[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
     }
     return res;
 }
@@ -62,7 +53,6 @@ bool ESEmu::GetRunEmulation() {
 }
 
 void ESEmu::Reset() {
-
     nes.Reset();
 }
 
@@ -74,6 +64,55 @@ void ESEmu::SetPC(uint16_t addr) {
     nes.GetCPU().SetPC(addr);
 }
 
+bool ESEmu::KeyDown(std::string key_name) {
+    std::cout << key_name << '\n';
+    if (key_name == "w") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::UP);
+    } else if (key_name == "a") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::LEFT);
+    } else if (key_name == "s") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::DOWN);
+    } else if (key_name == "d") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::RIGHT);
+    } else if (key_name == "j") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::B);
+    } else if (key_name == "k") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::A);
+    } else if (key_name == "u") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::START);
+    } else if (key_name == "i") {
+        nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::SELECT);
+    } else {
+        return false;
+    }
+
+    return true;
+}
+
+bool ESEmu::KeyUp(std::string key_name) {
+    std::cout << "key up " << key_name << '\n';
+    if (key_name == "w") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::UP);
+    } else if (key_name == "a") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::LEFT);
+    } else if (key_name == "s") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::DOWN);
+    } else if (key_name == "d") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::RIGHT);
+    } else if (key_name == "j") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::B);
+    } else if (key_name == "k") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::A);
+    } else if (key_name == "u") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::START);
+    } else if (key_name == "i") {
+        nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::SELECT);
+    } else {
+        return false;
+    }
+
+    return true;
+}
 }
 
 using namespace emscripten;
@@ -88,7 +127,9 @@ EMSCRIPTEN_BINDINGS(Emulator) {
     .function("setRunEmulation", &NESCLE::ESEmu::SetRunEmulation)
     .function("powerOn", &NESCLE::ESEmu::PowerOn)
     .function("reset", &NESCLE::ESEmu::Reset)
-    .function("setPC", &NESCLE::ESEmu::SetPC);
+    .function("setPC", &NESCLE::ESEmu::SetPC)
+    .function("keyDown", &NESCLE::ESEmu::KeyDown)
+    .function("keyUp", &NESCLE::ESEmu::KeyUp);
 
     register_vector<uint8_t>("ByteArr");
 }

@@ -1,3 +1,5 @@
+/// <reference path="core/a.out.js" />
+
 import { useState, useRef, useEffect, useCallback } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -134,6 +136,7 @@ function RomSelector() {
       return;
     }
 
+    /** @type {ESEmu} */
     const emu = window.emulator;
 
     const reader = new FileReader();
@@ -212,11 +215,21 @@ function EmuScreen() {
 }
 
 function App() {
+  const wrapperRef = useRef(null);
+
+  const keyDownCallback = useCallback((e) => {
+    window.emulator.keyDown(e.key);
+  }, []);
+
+  const keyUpCallback = useCallback((e) => {
+    window.emulator.keyUp(e.key);
+  }, []);
+
   return (
-    <>
+    <div ref={wrapperRef} onKeyDown={keyDownCallback} onKeyUp={keyUpCallback}>
       <RomSelector />
       <EmuScreen />
-    </>
+    </div>
   );
 }
 
