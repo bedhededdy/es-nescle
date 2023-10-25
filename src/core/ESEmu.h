@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include <emscripten/val.h>
+
 #include "Bus.h"
 
 namespace NESCLE {
@@ -17,7 +19,7 @@ private:
 public:
     bool LoadROM(uintptr_t file_buf_ptr);
     void Clock();
-    std::vector<uint8_t> GetFrameBuffer();
+    emscripten::val GetFrameBuffer();
 
     void PowerOn();
     void Reset();

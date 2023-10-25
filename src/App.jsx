@@ -180,30 +180,53 @@ function EmuScreen() {
   const canvasWidth = 512;
   const canvasHeight = 480;
 
+  const onAnimationFrame = useCallback(() => {
+    var t0 = Date.now();
+    window.emulator.clock();
+    if (window.emulator.getRunEmulation()) {
+      // console.log("Render cycle after clock: " + (Date.now() - t0));
+
+      // FIXME: MEMCPY IS THE PROBLEM
+      //        EITHER DO A MORE EFFICIENT MEMCPY OR YOU HAVE TO PERFORM
+      //        THE RENDER FROM C++ WITH SDL
+
+      // TODO: INVESTIGATE THIS
+      //       https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html?highlight=memory#memory-views
+      // const pxVec = emu.getFrameBuffer();
+      // const pxArr = new Uint8Array(pxVec.size());
+      // for (let i = 0; i < pxArr.length; i++) {
+      //   pxArr[i] = pxVec.get(i);
+      // }
+      // conxt pxArr = new Uint8Array(
+      // this fixes the leak
+      // pxVec.delete();
+      const pxArr = emu.getFrameBuffer();
+
+      // TODO: THE SCALING MAY BE SLOW
+      // console.log("Render cycle before draw: " + (Date.now() - t0));
+      const scaleFactor = canvasWidth / 256;
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        const imgData = ctx.createImageData(256, 240);
+        imgData.data.set(pxArr);
+        ctx.putImageData(imgData, 0, 0, 0, 0, canvasWidth, canvasHeight);
+        // ctx.scale(scaleFactor, scaleFactor);
+        ctx.drawImage(canvas, 0, 0, canvasWidth, canvasHeight);
+      }
+      // this fixes the leak
+      // pxVec.delete();
+      // console.log("Render cycle after draw: " + (Date.now() - t0));
+    }
+    window.requestAnimationFrame(onAnimationFrame);
+  }, []);
+
   useEffect(() => {
-    setInterval(() => {
-      window.emulator.clock();
-      setRenderFrame(true);
-    }, 16);
+    // Not smooth, not running in realtime
+    onAnimationFrame();
   }, [])
 
   if (renderFrame) {
-    const pxVec = emu.getFrameBuffer();
-    const pxArr = new Uint8Array(pxVec.size());
-    for (let i = 0; i < pxArr.length; i++) {
-      pxArr[i] = pxVec.get(i);
-    }
-
-    const scaleFactor = canvasWidth / 256;
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      const imgData = ctx.createImageData(256, 240);
-      imgData.data.set(pxArr);
-      ctx.putImageData(imgData, 0, 0, 0, 0, canvasWidth, canvasHeight);
-      ctx.scale(scaleFactor, scaleFactor);
-      ctx.drawImage(canvas, 0, 0, canvasWidth, canvasHeight);
-    }
     setRenderFrame(false);
   }
 

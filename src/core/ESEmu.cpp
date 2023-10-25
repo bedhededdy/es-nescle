@@ -8,19 +8,30 @@
 #include "PPU.h"
 
 namespace NESCLE {
-std::vector<uint8_t> ESEmu::GetFrameBuffer() {
-    // FIXME: USE FRAMEBUFFER PROPERLY
-    // FIXME: THIS IS LEAKING INFINITY MEMORY
+emscripten::val ESEmu::GetFrameBuffer() {
     constexpr int size = 256 * 240 * 4;
-    std::vector<uint8_t> res(size);
+    // std::vector<uint8_t> res(size);
+    // uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
+    // for (int i = 0; i < size; i += 4) {
+    //     res[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
+    //     res[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
+    //     res[i+2] = frame_buffer[i/4] & 0x000000ff;
+    //     res[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
+    // }
+    // return res;
+
+    // FIXME: THIS WILL LEAK INFINITY MEMORY, BUT LET'S SEE IF
+    //        IT FIXES THE MEMCPY PERFORMANCE ISSUE
     uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
+    // FIXME: MAY NEED TO BE UNSIGNED CHAR TO WORK??
+    uint8_t* fixed_byteorder_arr = new uint8_t[256 * 240 * 4];
     for (int i = 0; i < size; i += 4) {
-        res[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
-        res[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
-        res[i+2] = frame_buffer[i/4] & 0x000000ff;
-        res[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
+        fixed_byteorder_arr[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
+        fixed_byteorder_arr[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
+        fixed_byteorder_arr[i+2] = frame_buffer[i/4] & 0x000000ff;
+        fixed_byteorder_arr[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
     }
-    return res;
+    return emscripten::val(emscripten::typed_memory_view(size, fixed_byteorder_arr));
 }
 
 bool ESEmu::LoadROM(uintptr_t buf_as_ptr) {
