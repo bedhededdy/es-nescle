@@ -30,7 +30,7 @@ emscripten::val ESEmu::GetFrameBuffer() {
         frame_buffer_fixed[i+2] = frame_buffer[i/4] & 0x000000ff;
         frame_buffer_fixed[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
     }
-    return emscripten::val(emscripten::typed_memory_view(size, fixed_byteorder_arr));
+    return emscripten::val(emscripten::typed_memory_view(size, frame_buffer_fixed));
 }
 
 bool ESEmu::LoadROM(uintptr_t buf_as_ptr) {
