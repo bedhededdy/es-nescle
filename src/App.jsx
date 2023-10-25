@@ -181,10 +181,17 @@ function EmuScreen() {
   const canvasHeight = 480;
 
   const onAnimationFrame = useCallback(() => {
-    // FIXME: NEED A WAY TO TELL IT NOT TO CLOCK IF NOT ENOUGH
-    //        TIME HAS PASSED
+    // FIXME: WE DON'T KNOW HOW MUCH TIME HAS PASSED
+    //        ON A 144HZ MONITOR, A FRAME OCCURS EVERY 7MS
+    //        THAT MEANS THAT IF LESS THAN 7MS IS LEFT ON THIS
+    //        TIME WE WILL RENDER THE FRAME LATE NEXT TIME
+    //        TAKE INTO ACCOUNT A 5MS RENDER TIME ON MY PC AND THAT
+    //        IS EXTREMELY CLOSE TO MISSING A WHOLE FRAME
+    //        WE NEED SOME KIND OF MECHANISM TO FIGURE OUT APPROXIMATELY
+    //        HOW LONG TO WAIT BEFORE DECIDING TO CLOCK AGAIN
+    //        INSTEAD OF HARDCODING FOR MY PC
     var t0 = Date.now();
-    if (t0 - window.lastRenderTime >= 16) {
+    if (t0 - window.lastRenderTime >= 16 - 2) {
       window.emulator.clock();
       window.lastRenderTime = t0;
     }
