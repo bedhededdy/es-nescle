@@ -184,7 +184,12 @@ function EmuScreen() {
     // FIXME: NEED A WAY TO TELL IT NOT TO CLOCK IF NOT ENOUGH
     //        TIME HAS PASSED
     var t0 = Date.now();
-    window.emulator.clock();
+    if (t0 - window.lastRenderTime >= 16) {
+      window.emulator.clock();
+      window.lastRenderTime = t0;
+    }
+    // else
+      // console.log("time since last render: " + (t0 - window.lastRenderInstant));
     if (window.emulator.getRunEmulation()) {
       // console.log("Render cycle after clock: " + (Date.now() - t0));
 
@@ -219,6 +224,7 @@ function EmuScreen() {
       // this fixes the leak
       // pxVec.delete();
       // console.log("Render cycle after draw: " + (Date.now() - t0));
+
     }
     window.requestAnimationFrame(onAnimationFrame);
   }, []);
