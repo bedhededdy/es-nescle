@@ -10,20 +10,7 @@
 namespace NESCLE {
 emscripten::val ESEmu::GetFrameBuffer() {
     constexpr int size = 256 * 240 * 4;
-    // std::vector<uint8_t> res(size);
-    // uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
-    // for (int i = 0; i < size; i += 4) {
-    //     res[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
-    //     res[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
-    //     res[i+2] = frame_buffer[i/4] & 0x000000ff;
-    //     res[i+3] = (frame_buffer[i/4] & 0xff000000) >> 24;
-    // }
-    // return res;
-
-    // FIXME: THIS WILL LEAK INFINITY MEMORY, BUT LET'S SEE IF
-    //        IT FIXES THE MEMCPY PERFORMANCE ISSUE
     uint32_t* frame_buffer = nes.GetPPU().GetFramebuffer();
-    // FIXME: MAY NEED TO BE UNSIGNED CHAR TO WORK??
     for (int i = 0; i < size; i += 4) {
         frame_buffer_fixed[i+0] = (frame_buffer[i/4] & 0x00ff0000) >> 16;
         frame_buffer_fixed[i+1] = (frame_buffer[i/4] & 0x0000ff00) >> 8;
@@ -75,7 +62,6 @@ void ESEmu::SetPC(uint16_t addr) {
 }
 
 bool ESEmu::KeyDown(std::string key_name) {
-    std::cout << key_name << '\n';
     if (key_name == "w") {
         nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::UP);
     } else if (key_name == "a") {
@@ -100,7 +86,6 @@ bool ESEmu::KeyDown(std::string key_name) {
 }
 
 bool ESEmu::KeyUp(std::string key_name) {
-    std::cout << "key up " << key_name << '\n';
     if (key_name == "w") {
         nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::UP);
     } else if (key_name == "a") {

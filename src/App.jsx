@@ -5,126 +5,6 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-// function App() {
-//   // FIXME: HAVING THIS USESTATE HERE MAY BE CAUSING THE MEM LEAK
-//   // const [emu, setEmu] = useState(new window.emuModule.ESEmu());
-//   const emu = window.emulator;
-
-//   // FIXME: THIS CAUSES INFINITE RERENDERING
-//   // WHICH MEANS INFINITE RECALLS OF THE ON CHANGE LISTENER???
-//   // const [renderFrame, setRenderFrame] = useState(false);
-
-//   const canvasRef = useRef(null);
-//   const chooseFileRef = useRef(null);
-
-//   const canvasWidth = 512;
-//   const canvasHeight = 480;
-
-//   const renderFrameCallback = () => {
-//     setInterval(() => {
-//       emu.clock();
-//       // setRenderFrame(true);
-//     }, 1)
-//   }
-
-//   // useEffect(() => {
-//     // if (renderFrame) {
-//       // console.log("rendering frame");
-//       // FIXME: FOR WHATEVER REASON THIS IF GUARD CAUSES THE MEMORY LEAK SOONER???
-//       // FIXME: WE MAY BE SHOWING THE GAME, BUT CANVAS DOESN'T UPDATE
-//       // if (emu.getRunEmulation()) {
-//         // console.log('rendering frame');
-//         const pxVec = emu.getFrameBuffer();
-//         const pxArr = new Uint8Array(pxVec.size());
-//         for (let i = 0; i < pxArr.length; i++) {
-//           pxArr[i] = pxVec.get(i);
-//         }
-
-//         const scaleFactor = canvasWidth / 256;
-//         const canvas = canvasRef.current;
-//         const ctx = canvas.getContext("2d");
-//         const imgData = ctx.createImageData(256, 240);
-//         imgData.data.set(pxArr);
-//         ctx.putImageData(imgData, 0, 0, 0, 0, canvasWidth, canvasHeight);
-//         ctx.scale(scaleFactor, scaleFactor);
-//         ctx.drawImage(canvas, 0, 0, canvasWidth, canvasHeight);
-
-//     // }
-//     setRenderFrame(false);
-//   // }
-//   // }, [renderFrame]);
-
-//   useEffect(() => {
-//     renderFrameCallback();
-//   }, []);
-
-//   useEffect(() => {
-//     chooseFileRef.current.addEventListener("change", (e) => {
-//       const file = e.target.files[0];
-//       if (!file) return;
-
-//       const reader = new FileReader();
-
-//       reader.onload = (e) => {
-//         const buffer = e.target.result;
-//         // const bufferAsArr = new Uint8Array(buffer);
-//         // console.log("Buffer strlen: " + bufferAsArr.length);
-//         // FIXME: THE PROBLEM IS THAT EACH BYTE IS BEING CONVERTED INTO AN ASCII
-//         // SO ARR[0,1] = 78 WHICH IS ACTUALLY ASCII FOR 'N'
-//         // console.log("Buffer header: " + bufferAsArr.slice(0, 4));
-
-//         // FIXME: EXPORT MALLOC AND ALLOCATE A BUFFER
-//         // ALSO COMPILE WITH RUNTIME ASSERTIONS (-S ASSERTIONS=1)
-
-//         // FIXME: MALLOC MISSING FREE
-//         // const bufferView = new Uint8Array(buffer);
-//         // buffer.
-//         // const finalBuffer = bufferView.byteOffset;
-
-//         // console.log("Buffer bytelen: " + bufferView.byteLength);
-
-//         // console.log("First 4: ", bufferView.slice(0, 4));
-
-//         // FIXME: THIS GETS CALLED FOREVER????
-//         console.log("called");
-
-//         const bufPtr = window.emuModule._malloc(buffer.byteLength);
-//         const finalBuffer = new Uint8Array(window.emuModule.HEAPU8.buffer, bufPtr, buffer.byteLength);
-//         finalBuffer.set(new Uint8Array(buffer));
-
-
-//         // FIXME: THIS WON'T WORK BECAUSE YOU'RE NOT ALLOWING RAW PTR
-//         // NOT SURE HOW TO FIX
-//         if (emu.loadROM(finalBuffer.byteOffset)) {
-//           emu.powerOn();
-//           emu.reset();
-//           emu.setRunEmulation(true);
-//         } else {
-//           emu.setRunEmulation(false);
-//         }
-
-//         window.emuModule._free(bufPtr);
-
-//       }
-
-//       reader.readAsArrayBuffer(file);
-
-//       return () => {
-//         chooseFileRef.current.removeEventListener("change", () => {});
-//       }
-//     });
-//   }, [chooseFileRef]);
-
-//   return (
-//     <>
-//       <div>
-//         <input ref={chooseFileRef} type="file" />
-//       </div>
-//       <canvas ref={canvasRef} id="emuScreen" width={canvasWidth} height={canvasHeight}></canvas>
-//     </>
-//   )
-// }
-
 function RomSelector() {
   const chooseFileRef = useRef(null);
 
@@ -175,10 +55,13 @@ function EmuScreen() {
 
   const emu = window.emulator;
 
-  const canvasRef = useRef(null);
+  const nativeResRef = useRef(null);
+  const scaledResRef = useRef(null);
 
-  const canvasWidth = 512;
-  const canvasHeight = 480;
+  const scaledWidth = 512;
+  const scaledHeight = 480;
+  const nativeWidth = 256;
+  const nativeHeight = 240;
 
   const onAnimationFrame = useCallback(() => {
     // FIXME: WE DON'T KNOW HOW MUCH TIME HAS PASSED
@@ -191,47 +74,31 @@ function EmuScreen() {
     //        HOW LONG TO WAIT BEFORE DECIDING TO CLOCK AGAIN
     //        INSTEAD OF HARDCODING FOR MY PC
     var t0 = Date.now();
-    if (t0 - window.lastRenderTime >= 16 - 2) {
+    // 1ms is a little slow but 2ms is a little fast
+    if (t0 - window.lastRenderTime >= 16 - 1) {
       window.emulator.clock();
       window.lastRenderTime = t0;
     }
-    // else
-      // console.log("time since last render: " + (t0 - window.lastRenderInstant));
+
     if (window.emulator.getRunEmulation()) {
-      // console.log("Render cycle after clock: " + (Date.now() - t0));
-
-      // FIXME: MEMCPY IS THE PROBLEM
-      //        EITHER DO A MORE EFFICIENT MEMCPY OR YOU HAVE TO PERFORM
-      //        THE RENDER FROM C++ WITH SDL
-
-      // TODO: INVESTIGATE THIS
-      //       https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html?highlight=memory#memory-views
-      // const pxVec = emu.getFrameBuffer();
-      // const pxArr = new Uint8Array(pxVec.size());
-      // for (let i = 0; i < pxArr.length; i++) {
-      //   pxArr[i] = pxVec.get(i);
-      // }
-      // conxt pxArr = new Uint8Array(
-      // this fixes the leak
-      // pxVec.delete();
       const pxArr = emu.getFrameBuffer();
 
-      // TODO: THE SCALING MAY BE SLOW
-      // console.log("Render cycle before draw: " + (Date.now() - t0));
-      const scaleFactor = canvasWidth / 256;
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const ctx = canvas.getContext("2d");
-        const imgData = ctx.createImageData(256, 240);
-        imgData.data.set(pxArr);
-        ctx.putImageData(imgData, 0, 0, 0, 0, canvasWidth, canvasHeight);
-        // ctx.scale(scaleFactor, scaleFactor);
-        ctx.drawImage(canvas, 0, 0, canvasWidth, canvasHeight);
-      }
-      // this fixes the leak
-      // pxVec.delete();
-      // console.log("Render cycle after draw: " + (Date.now() - t0));
+      const scaleFactor = scaledWidth / 256;
+      const nativeCanvas = nativeResRef.current;
+      const scaledCanvas = scaledResRef.current;
+      if (nativeCanvas && scaledCanvas) {
+        const nativeContext = nativeCanvas.getContext("2d");
+        const nativeImgData = nativeContext.createImageData(nativeWidth, nativeHeight);
+        nativeImgData.data.set(pxArr);
+        nativeContext.putImageData(nativeImgData, 0, 0, 0, 0, nativeWidth, nativeHeight);
 
+        const scaledContext = scaledCanvas.getContext("2d");
+        // If we don't do this, there is horrible anti-aliasing
+        scaledContext.webkitImageSmoothingEnabled = false;
+        scaledContext.mozImageSmoothingEnabled = false;
+        scaledContext.imageSmoothingEnabled = false;
+        scaledContext.drawImage(nativeCanvas, 0, 0, nativeWidth, nativeHeight, 0, 0, nativeWidth * scaleFactor, nativeHeight * scaleFactor);
+      }
     }
     window.requestAnimationFrame(onAnimationFrame);
   }, []);
@@ -247,24 +114,35 @@ function EmuScreen() {
 
   return (
     <>
-      <canvas ref={canvasRef} id="emuScreen" width={canvasWidth} height={canvasHeight}></canvas>
+      <canvas style={{"display": "none"}} ref={nativeResRef} width={nativeWidth} height={nativeHeight}></canvas>
+      <canvas ref={scaledResRef} width={scaledWidth} height={scaledHeight}></canvas>
     </>
   );
+}
+
+function keyDownCallback(e) {
+  window.emulator.keyDown(e.key);
+}
+
+function keyUpCallback(e) {
+  window.emulator.keyUp(e.key);
 }
 
 function App() {
   const wrapperRef = useRef(null);
 
-  const keyDownCallback = useCallback((e) => {
-    window.emulator.keyDown(e.key);
-  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", keyDownCallback);
+    document.addEventListener("keyup", keyUpCallback);
 
-  const keyUpCallback = useCallback((e) => {
-    window.emulator.keyUp(e.key);
-  }, []);
+    return () => {
+      document.removeEventListener("keydown", keyDownCallback);
+      document.removeEventListener("keyup", keyUpCallback);
+    }
+  }, [])
 
   return (
-    <div ref={wrapperRef} onKeyDown={keyDownCallback} onKeyUp={keyUpCallback}>
+    <div ref={wrapperRef}>
       <RomSelector />
       <EmuScreen />
     </div>
