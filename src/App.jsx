@@ -5,16 +5,25 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-function RomSelector() {
+function RomSelector(props) {
   const chooseFileRef = useRef(null);
+  const canvasRef = props.canvasRef;
 
   const fileSelected = useCallback((e) => {
     console.log("called");
     const file = e.target.files[0];
     if (!file) {
       console.log("No file selected");
+      choosefileRef.current.focus();
       return;
     }
+
+    // conveniently focus the canvas
+    // FIXME: DOESN'T WORK
+    canvasRef.current.focus();
+
+    console.log("focusing canvas...");
+    console.log("curre elem" + document.activeElement);
 
     /** @type {ESEmu} */
     const emu = window.emulator;
@@ -44,24 +53,33 @@ function RomSelector() {
   }, []);
 
   return (
-    <>
-      <input ref={chooseFileRef} onChange={fileSelected} type="file" />
-    </>
+    <div>
+      <input style={{"display": "none"}} ref={chooseFileRef} onChange={fileSelected} type="file" />
+      <button onClick={() => chooseFileRef.current.click()}>Choose ROM</button>
+    </div>
   )
 }
 
-function EmuScreen() {
+function EmuScreen(props) {
   const [renderFrame, setRenderFrame] = useState(false);
 
   const emu = window.emulator;
 
   const nativeResRef = useRef(null);
-  const scaledResRef = useRef(null);
+  const scaledResRef = props.canvasRef;
 
   const scaledWidth = 512;
   const scaledHeight = 480;
   const nativeWidth = 256;
   const nativeHeight = 240;
+
+  const focusCanvasCallback = useCallback((e) => {
+    scaledResRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    scaledResRef.current.tabIndex = 0;
+  }, [scaledResRef.current]);
 
   const onAnimationFrame = useCallback(() => {
     // FIXME: WE DON'T KNOW HOW MUCH TIME HAS PASSED
@@ -86,6 +104,7 @@ function EmuScreen() {
       const scaleFactor = scaledWidth / 256;
       const nativeCanvas = nativeResRef.current;
       const scaledCanvas = scaledResRef.current;
+      // draws the white border, not desired
       if (nativeCanvas && scaledCanvas) {
         const nativeContext = nativeCanvas.getContext("2d");
         const nativeImgData = nativeContext.createImageData(nativeWidth, nativeHeight);
@@ -108,6 +127,11 @@ function EmuScreen() {
     onAnimationFrame();
   }, [])
 
+  useEffect(() => {
+    console.log("focusing the canvas");
+    scaledResRef.current.focus();
+  }, [scaledResRef.current]);
+
   if (renderFrame) {
     setRenderFrame(false);
   }
@@ -115,12 +139,14 @@ function EmuScreen() {
   return (
     <>
       <canvas style={{"display": "none"}} ref={nativeResRef} width={nativeWidth} height={nativeHeight}></canvas>
-      <canvas ref={scaledResRef} width={scaledWidth} height={scaledHeight}></canvas>
+      <canvas ref={scaledResRef} width={scaledWidth} height={scaledHeight} onClick={focusCanvasCallback}></canvas>
     </>
   );
 }
 
 function keyDownCallback(e) {
+  if (e.key === "Enter" || e.key === "Backspace")
+    e.preventDefault();
   window.emulator.keyDown(e.key);
 }
 
@@ -130,6 +156,7 @@ function keyUpCallback(e) {
 
 function App() {
   const wrapperRef = useRef(null);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     document.addEventListener("keydown", keyDownCallback);
@@ -143,8 +170,8 @@ function App() {
 
   return (
     <div ref={wrapperRef}>
-      <RomSelector />
-      <EmuScreen />
+      <RomSelector canvasRef={canvasRef} />
+      <EmuScreen canvasRef={canvasRef} />
     </div>
   );
 }

@@ -74,9 +74,9 @@ bool ESEmu::KeyDown(std::string key_name) {
         nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::B);
     } else if (key_name == "k") {
         nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::A);
-    } else if (key_name == "u") {
+    } else if (key_name == "Enter") {
         nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::START);
-    } else if (key_name == "i") {
+    } else if (key_name == "Backspace") {
         nes.SetController1(nes.GetController1() | (int)Bus::NESButtons::SELECT);
     } else {
         return false;
@@ -98,9 +98,9 @@ bool ESEmu::KeyUp(std::string key_name) {
         nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::B);
     } else if (key_name == "k") {
         nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::A);
-    } else if (key_name == "u") {
+    } else if (key_name == "Enter") {
         nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::START);
-    } else if (key_name == "i") {
+    } else if (key_name == "Backspace") {
         nes.SetController1(nes.GetController1() & ~(int)Bus::NESButtons::SELECT);
     } else {
         return false;

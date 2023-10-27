@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+canvas:focus {
+  outline: none;
+  border: 2px solid #646cff;
+}
