@@ -1,0 +1,9 @@
+.screenContainer {
+    /* position: relative; */
+}
+
+.screenChild {
+    /* position: absolute; */
+    /* top: 50%; */
+    /* left: 50%; */
+}
